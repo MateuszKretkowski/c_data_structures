@@ -6,20 +6,30 @@
 
 void writeLogs(int *localLines) {
     FILE *f = fopen("./log.txt", "w");
+    if (!f) {
+        perror("Nie można otworzyć log.txt do zapisu");
+        return;
+    }
+
     srand(time(0));
-    int randomRows = (rand() % 2000) + 1;
+    int randomRows = (rand() % 50) + 1;
     *localLines = randomRows;
+
     for (int i = 0; i < randomRows; i++) {
-        int randomLen = (rand() % 200) + 1;
-        char *str = malloc((randomLen) * sizeof(char));
+        int randomLen = (rand() % 100) + 50;
+        char *str = malloc((randomLen + 1) * sizeof(char));
         for (int j = 0; j < randomLen; j++) {
             str[j] = 'a' + rand() % 26;
         }
-        fwrite(str, sizeof(char), randomLen, f);
+        str[randomLen] = '\0';
+        fputs(str, f);
         fputs("\n", f);
         free(str);
     }
+
+    fclose(f);
 }
+
 
 char *pickLongestLine() {
     FILE *f = fopen("./log.txt", "r");
