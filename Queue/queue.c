@@ -19,7 +19,7 @@ struct Queue *CreateQueue(int value) {
     headNode->next = NULL;
     queue->headNode = headNode;
     queue->lastNode = headNode;
-    queue->size++;
+    queue->size = 1;
     return queue;
 }
 
