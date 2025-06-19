@@ -40,6 +40,7 @@ void RemoveNode(struct LinkedList *linkedList, int index) {
     if (index == 0) {
         free(linkedList->headNode);
         linkedList->headNode = linkedList->headNode->next;
+        linkedList->size--;
         return;
     }
     struct Node *currNode = linkedList->headNode;
@@ -49,6 +50,7 @@ void RemoveNode(struct LinkedList *linkedList, int index) {
             free(currNode->next);
             printf("Removing");
             currNode->next = currNode->next->next;
+            linkedList->size--;
             return;
         }
         currNode = currNode->next;
@@ -89,5 +91,6 @@ int main() {
     scanf("%d", &indexToRemove);
     RemoveNode(linkedList, indexToRemove);
     PrintLinkedList(linkedList);
+    free(linkedList);
     return 0;
 }
