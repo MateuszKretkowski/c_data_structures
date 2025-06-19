@@ -26,23 +26,60 @@ struct bst *CreateBinarySearchTree(int value) {
     return newBst;
 }
 
-void AddValue(struct bst *bst, int value, struct Node *currNode) {
-    struct Node *newNode = malloc(sizeof(struct Node));
-    newNode->value = value;
+void AddValue(int value, struct Node *currNode) {
     if (currNode->value < value) {
         if (currNode->rightNode == NULL) {
+            struct Node *newNode = malloc(sizeof(struct Node));
+            newNode->value = value;
             currNode->rightNode = newNode;
             return;
         }
-        AddValue(bst, value, currNode->rightNode);
+        AddValue(value, currNode->rightNode);
     }
     else {
         if (currNode->leftNode == NULL) {
+            struct Node *newNode = malloc(sizeof(struct Node));
+            newNode->value = value;
             currNode->leftNode = newNode;
             return;
         }
-        AddValue(bst, value, currNode->leftNode);
+        AddValue(value, currNode->leftNode);
     }
+}
+
+struct Node *FindSuccessor(struct Node *currNode) {
+    currNode = currNode->rightNode;
+    while (currNode->leftNode != NULL) {
+        currNode = currNode->leftNode;
+    }
+    return currNode;
+}
+
+struct Node *RemoveValue(struct Node *currNode, int value) {
+    if (value > currNode->value) {
+        currNode->rightNode = RemoveValue(currNode->rightNode, value);
+    }
+    else if (value < currNode->value) {
+        currNode->leftNode = RemoveValue(currNode->leftNode, value);
+    }
+    else {
+        if (currNode->leftNode == NULL) {
+            struct Node *temp = currNode->rightNode;
+            free(currNode);
+            return temp;
+        }
+
+        if (currNode->rightNode == NULL) {
+            struct Node *temp = currNode->leftNode;
+            free(currNode);
+            return temp;
+        }
+
+        struct Node *successor = FindSuccessor(currNode->rightNode);
+        currNode->value = successor->value;
+        currNode->rightNode = RemoveValue(currNode->rightNode, successor->value);
+    }
+    return currNode;
 }
 
 void InOrderTraversalPrint(struct Node *currNode) {
@@ -53,6 +90,13 @@ void InOrderTraversalPrint(struct Node *currNode) {
     printf("\n%d, ", currNode->value);
     InOrderTraversalPrint(currNode->rightNode);
 }
+
+// NA JUTRO:
+/* 
+- Free Tree();
+- GetValue();
+- Jestem Zajebisty;
+*/
 
 int main() {
     struct bst *bst;
@@ -67,9 +111,15 @@ int main() {
             bst = CreateBinarySearchTree(value);
         }
         else {
-            AddValue(bst, value, bst->rootNode);
+            AddValue(value, bst->rootNode);
         }
     }
+    InOrderTraversalPrint(bst->rootNode);
+
+    printf("Pick a value to Remove: ");
+    int num2;
+    scanf("%d", &num2);
+    bst->rootNode = RemoveValue(bst->rootNode, num2);
     InOrderTraversalPrint(bst->rootNode);
     return 0;
 }
