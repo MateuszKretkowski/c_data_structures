@@ -78,6 +78,7 @@ struct Node *RemoveValue(struct Node *currNode, int value) {
         struct Node *successor = FindSuccessor(currNode->rightNode);
         currNode->value = successor->value;
         currNode->rightNode = RemoveValue(currNode->rightNode, successor->value);
+        
     }
     return currNode;
 }
@@ -89,6 +90,13 @@ void InOrderTraversalPrint(struct Node *currNode) {
     InOrderTraversalPrint(currNode->leftNode);
     printf("\n%d, ", currNode->value);
     InOrderTraversalPrint(currNode->rightNode);
+}
+
+void FreeTree(struct bst *bst, struct Node *currNode) {
+    FreeTree(bst, currNode->leftNode);
+    free(currNode);
+    FreeTree(bst, currNode->rightNode);
+    free(bst);
 }
 
 // NA JUTRO:
