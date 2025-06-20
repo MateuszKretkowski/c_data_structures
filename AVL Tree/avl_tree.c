@@ -142,6 +142,15 @@ struct Node *RemoveValue(struct Node *currNode, int value) {
     return currNode;
 }
 
+void FreeAVLtree(struct Node *root) {
+    if (root == NULL) {
+        return;
+    }
+    FreeAVLtree(root->leftNode);
+    FreeAVLtree(root->rightNode);
+    free(root);
+}
+
 void preOrder(struct Node *root)
 {
     if(root != NULL)
@@ -165,5 +174,6 @@ int main() {
 
     printf("preOrder: \n");
     preOrder(root);
+    FreeAVLtree(root);
     return 0;
 }
