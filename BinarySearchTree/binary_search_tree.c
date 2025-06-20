@@ -92,6 +92,19 @@ void InOrderTraversalPrint(struct Node *currNode) {
     InOrderTraversalPrint(currNode->rightNode);
 }
 
+struct Node *GetValue(struct Node *currNode, int value) {
+    if (currNode == NULL) return NULL;
+    if (value > currNode->value) {
+        return GetValue(currNode->rightNode, value);
+    }
+    else if (value < currNode->value) {
+        return GetValue(currNode->leftNode, value);
+    }
+    else {
+        return currNode;
+    }
+}
+
 void FreeTree(struct bst *bst, struct Node *currNode) {
     FreeTree(bst, currNode->leftNode);
     free(currNode);
