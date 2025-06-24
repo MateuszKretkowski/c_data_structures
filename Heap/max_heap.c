@@ -1,18 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct MinHeap {
+struct MaxHeap {
     int *data;
     int size;
     int capacity;
 };
 
-void HeapifyUp(struct MinHeap *heap, int i);
-void HeapifyDown(struct MinHeap *heap, int i);
-void Swap(struct MinHeap *heap, int a, int b);
+void HeapifyUp(struct MaxHeap *heap, int i);
+void HeapifyDown(struct MaxHeap *heap, int i);
+void Swap(struct MaxHeap *heap, int a, int b);
 
-struct MinHeap *CreateNewHeap(int value, int capacity) {
-    struct MinHeap *newHeap = malloc(sizeof(struct MinHeap));
+struct MaxHeap *CreateNewHeap(int value, int capacity) {
+    struct MaxHeap *newHeap = malloc(sizeof(struct MaxHeap));
     newHeap->data = malloc(capacity * sizeof(int));
     newHeap->capacity = capacity;
     newHeap->size = 1;
@@ -20,7 +20,7 @@ struct MinHeap *CreateNewHeap(int value, int capacity) {
     return newHeap;
 }
 
-void Insert(struct MinHeap *heap, int value) {
+void Insert(struct MaxHeap *heap, int value) {
     if (heap->size == heap->capacity) {
         heap->capacity *= 2;
         heap->data = realloc(heap->data, heap->capacity * sizeof(int));
@@ -31,7 +31,7 @@ void Insert(struct MinHeap *heap, int value) {
     HeapifyUp(heap, (heap->size - 1));
 }
 
-int Remove(struct MinHeap *heap, int index) {
+int Remove(struct MaxHeap *heap, int index) {
     if (index < 0 || index >= heap->size) {
         return -1;
     }
@@ -47,40 +47,38 @@ int Remove(struct MinHeap *heap, int index) {
     return value;
 }
 
-int ExtractMin(struct MinHeap *heap) {
+int ExtractMax(struct MaxHeap *heap) {
     int value = heap->data[0];
     Remove(heap, 0);
     return value;
 }
 
-int ExtractMax(struct MinHeap *heap) {
+int ExtractMin(struct MaxHeap *heap) {
     int value = heap->data[heap->size - 1];
     Remove(heap, heap->size - 1);
     return value;
 }
 
-void HeapifyUp(struct MinHeap *heap, int i) {
+void HeapifyUp(struct MaxHeap *heap, int i) {
     if (i == 0) {
         return;
     }
     int parent = (i - 1) / 2;
-    if (heap->data[parent] > heap->data[i]) {
+    if (heap->data[parent] < heap->data[i]) {
         Swap(heap, parent, i);
         HeapifyUp(heap, parent);
     }
 }
 
-void HeapifyDown(struct MinHeap *heap, int i) {
+void HeapifyDown(struct MaxHeap *heap, int i) {
     int leftChild = 2 * i + 1;
     int rightChild = 2 * i + 2;
     int index = i;
-    if (i >= heap->size - 1) {
-        return;
-    }
-    if (leftChild < heap->size && heap->data[i] > heap->data[leftChild]) {
+
+    if (leftChild < heap->size && heap->data[i] < heap->data[leftChild]) {
         index = leftChild;
     }
-    if (rightChild < heap->size && heap->data[rightChild] < heap->data[index]) {
+    if (rightChild < heap->size && heap->data[rightChild] > heap->data[index]) {
         index = rightChild;
     }
     if (index != i) {
@@ -90,21 +88,21 @@ void HeapifyDown(struct MinHeap *heap, int i) {
     return;
 }
 
-void printHeap(struct MinHeap *heap) {
+void printHeap(struct MaxHeap *heap) {
     for (int i = 0; i < heap->size; i++) {
         printf("%d ", heap->data[i]);
     }
     printf("\n");
 }
 
-void Swap(struct MinHeap *heap, int a, int b) {
+void Swap(struct MaxHeap *heap, int a, int b) {
     int temp = heap->data[a];
     heap->data[a] = heap->data[b];
     heap->data[b] = temp;
 }
 
 int main() {
-    struct MinHeap *heap;
+    struct MaxHeap *heap;
     heap = CreateNewHeap(3, 5);
     
     Insert(heap, 2);
